@@ -1,0 +1,14 @@
+from scipy.optimize import linprog
+
+c = [-3, -2, -5]
+A = [[1, 1, 0], [2, 0, 1], [0, 1, 2]]
+b = [10, 9, 11]
+x0_bounds = (0, None)
+x1_bounds = (0, None)
+x2_bounds = (0, None)
+
+res = linprog(c, A_ub=A, b_ub=b, bounds=[x0_bounds, x1_bounds, x2_bounds], method='simplex')
+print('x =', res.x[0])
+print('y =', res.x[1])
+print('z =', res.x[2])
+print('MAX =', -res.fun)
