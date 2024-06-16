@@ -1,0 +1,49 @@
+import matplotlib.pyplot as plt
+
+# 迷宫地图
+maze = [
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1],
+    [1, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1]
+]
+
+# 机器人初始位置
+start = (1, 1)
+
+# 机器人移动方向
+directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+
+# 深度优先搜索算法
+def dfs(maze, pos, end):
+    if pos == end:
+        return [pos]
+    for dir in directions:
+        next_pos = (pos[0] + dir[0], pos[1] + dir[1])
+        if maze[next_pos[0]][next_pos[1]] == 0:
+            maze[next_pos[0]][next_pos[1]] = 2
+            path = dfs(maze, next_pos, end)
+            if path is not None:
+                return [pos] + path
+    return None
+
+# 执行搜索算法
+path = dfs(maze, start, (6, 6))
+
+# 可视化迷宫和机器人路径
+fig, ax = plt.subplots()
+for i in range(len(maze)):
+    for j in range(len(maze[0])):
+        if maze[i][j] == 1:
+            ax.fill([j, j+1, j+1, j], [len(maze)-i, len(maze)-i, len(maze)-i-1, len(maze)-i-1], 'k')
+        elif maze[i][j] == 2:
+            ax.fill([j, j+1, j+1, j], [len(maze)-i, len(maze)-i, len(maze)-i-1, len(maze)-i-1], 'g')
+for i in range(len(path)-1):
+    ax.plot([path[i][1]+0.5, path[i+1][1]+0.5], [len(maze)-path[i][0]-0.5, len(maze)-path[i+1][0]-0.5], 'r')
+ax.set_xlim([0, len(maze[0])])
+ax.set_ylim([0, len(maze)])
+plt.show()
